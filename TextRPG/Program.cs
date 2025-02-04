@@ -272,7 +272,7 @@ namespace TextRPG
                 {
                     player.Name = "Zombi";
                     player.Health = 100;
-                    Console.WriteLine($"부활합니다!");
+                    Console.WriteLine(invenitem[input].Effect);
                     Thread.Sleep(1000);
                     ChoiceState();
                 }
