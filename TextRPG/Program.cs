@@ -100,11 +100,33 @@ namespace TextRPG
                     Console.Clear();
                     Inventory();
                 }
+
                 else if (input == "2")
                 {
-                    Console.WriteLine("현재 인벤토리는 비었습니다.");
-                    Thread.Sleep(1000);
-                    ChoiceState();
+                    if(player.IsDead)
+                    {
+                        Random random = new Random();
+                        int ran = random.Next(0, 10);
+                        if(ran == 0)
+                        {
+                            Console.WriteLine("?");
+                            Thread.Sleep(1000);
+                            invenItem.Add(new Potion());
+                            Inventory();
+                        }
+                        else
+                        {
+                            Console.WriteLine("현재 인벤토리는 비었습니다.");
+                            Thread.Sleep(1000);
+                            ChoiceState();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("현재 인벤토리는 비었습니다.");
+                        Thread.Sleep(1000);
+                        ChoiceState();
+                    }
                 }
                 else if (input == "3")
                 {
@@ -135,15 +157,27 @@ namespace TextRPG
                 ColorString("상태 보기");
                 Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
 
-                if (player.Lv < 10)
-                    Console.WriteLine("Lv : 0{0}", player.Lv);
+                if(!player.IsDead)
+                {
+                    if (player.Lv < 10)
+                        Console.WriteLine("Lv : 0{0}", player.Lv);
+                    else
+                        Console.WriteLine("Lv : {0}", player.Lv);
+                    Console.WriteLine("{0} ({1})", player.Name, player.Job);
+                    Console.WriteLine("공격력 : {0}", player.AttakcDamage);
+                    Console.WriteLine("방어력 : {0}", player.Deffense);
+                    Console.WriteLine("체력 : {0}", player.Health);
+                    Console.WriteLine("Gold : {0}", player.Gold);
+                }
                 else
-                    Console.WriteLine("Lv : {0}", player.Lv);
-                Console.WriteLine("{0} ({1})", player.Name, player.Job);
-                Console.WriteLine("공격력 : {0}", player.AttakcDamage);
-                Console.WriteLine("방어력 : {0}", player.Deffense);
-                Console.WriteLine("체력 : {0}", player.Health);
-                Console.WriteLine("Gold : {0}", player.Gold);
+                {
+                    Console.WriteLine("Lv : ???");
+                    Console.WriteLine("{0} (???)", player.Name);
+                    Console.WriteLine("공격력 : ???");
+                    Console.WriteLine("방어력 : ???");
+                    Console.WriteLine("체력 : ???");
+                    Console.WriteLine("Gold : {0}", player.Gold);
+                }
 
 
                 Console.WriteLine("\n0. 나가기");
@@ -234,6 +268,14 @@ namespace TextRPG
             // 아이템이 사용/해제 사용중인 무기타입((int)Player.WeaponType)이 있다면 기존 아이템 해제 해 장착
             public void UseItemCheck(int input, List<IItem> invenitem)
             {
+                if (invenItem[input].WeaponType == 10)
+                {
+                    player.Name = "Zombi";
+                    player.Health = 100;
+                    Console.WriteLine($"부활합니다!");
+                    Thread.Sleep(1000);
+                    ChoiceState();
+                }
                 if (invenItem[input].Use == false)
                 {
                     foreach (IItem item in invenitem)
@@ -514,12 +556,7 @@ namespace TextRPG
                     {
                         Console.Clear();
                         invenItem.Clear();
-                        player.Lv = random.Next(-999999, -11111);
-                        player.Name = "______";
-                        player.AttakcDamage = random.Next(-999999, -11111);
-                        player.Deffense = random.Next(-999999, -11111);
-                        player.Health = random.Next(-999999, -11111);
-                        player.Gold = random.Next(-999999, -11111);
+                        player.Gold = 0;
                         ColorString("사망");
                     }
                 }

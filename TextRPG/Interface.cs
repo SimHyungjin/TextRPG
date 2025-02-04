@@ -141,6 +141,19 @@ namespace TextRPG
             public float Gold => 5000;
         }
 
+        public class Potion : IItem
+        {
+            public bool Use { get; set; } = false;
+            public bool Buy { get; set; } = true;
+            public int WeaponType => 10;
+            public string Name => "부활초";
+            public string Effect => "부활합니다.";
+            public float AttakcDamage => 0;
+            public int Deffense => 0;
+            public string Manual => "부활합니다.";
+            public float Gold => 0;
+        }
+
         interface IDungeon
         {
             string Name { get; }
