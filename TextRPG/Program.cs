@@ -270,8 +270,8 @@ namespace TextRPG
             {
                 if (invenItem[input].WeaponType == 10)
                 {
-                    player.Name = "Zombi";
-                    player.Health = 100;
+                    Potion potion = invenitem[input] as Potion;
+                    potion.PotionUse(player);
                     Console.WriteLine(invenitem[input].Effect);
                     Thread.Sleep(1000);
                     ChoiceState();

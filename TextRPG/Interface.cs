@@ -8,7 +8,7 @@ namespace TextRPG
 {
     namespace TextRPG
     {
-        interface ICharacter
+        public interface ICharacter
         {
             int Lv { get; set; }
             int Exp {  get; set; }
@@ -152,6 +152,10 @@ namespace TextRPG
             public int Deffense => 0;
             public string Manual => "부활합니다.";
             public float Gold => 0;
+            public void PotionUse(ICharacter player)
+            {
+                player.Health = 100;
+            }
         }
 
         interface IDungeon
