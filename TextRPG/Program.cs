@@ -12,12 +12,12 @@ namespace TextRPG
     {
         public class Stage
         {
-            private ICharacter player;
-            private List<IItem> items;
-            private List<IItem> invenItem;
-            private List<IDungeon> dungeons;
+            private Character player;
+            private List<Item> items;
+            private List<Item> invenItem;
+            private List<Dungeon> dungeons;
 
-            public Stage(ICharacter player, List<IItem> items, List<IItem> invenItem, List<IDungeon> dungeons)
+            public Stage(Character player, List<Item> items, List<Item> invenItem, List<Dungeon> dungeons)
             {
                 this.player = player;
                 this.items = items;
@@ -266,32 +266,31 @@ namespace TextRPG
 
             }
             // 아이템이 사용/해제 사용중인 무기타입((int)Player.WeaponType)이 있다면 기존 아이템 해제 해 장착
-            public void UseItemCheck(int input, List<IItem> invenitem)
+            public void UseItemCheck(int input, List<Item> invenitem)
             {
                 if (invenItem[input].WeaponType == 10)
                 {
-                    Potion potion = invenitem[input] as Potion;
-                    potion.PotionUse(player);
+                    invenItem[input].UseItem(player);
                     Console.WriteLine(invenitem[input].Effect);
                     Thread.Sleep(1000);
                     ChoiceState();
                 }
                 if (invenItem[input].Use == false)
                 {
-                    foreach (IItem item in invenitem)
+                    foreach (Item item in invenitem)
                     {
                         if (item.Use == true && invenItem[input].WeaponType == item.WeaponType)
                         {
                             item.Use = false;
-                            player.AttakcDamage -= item.AttakcDamage;
-                            player.Deffense -= item.Deffense;
+                            player.AttakcDamage -= item.AttackDamage;
+                            player.Deffense -= item.Defense;
                             Console.WriteLine($"{item.Name} 장착 해제!");
                         }
                     }
 
                     invenItem[input].Use = true;
-                    player.AttakcDamage += invenItem[input].AttakcDamage;
-                    player.Deffense += invenItem[input].Deffense;
+                    player.AttakcDamage += invenItem[input].AttackDamage;
+                    player.Deffense += invenItem[input].Defense;
                     Console.WriteLine($"{invenItem[input].Name} 장착 완료!");
                     Thread.Sleep(1000);
                     InventoryManagement();
@@ -299,8 +298,8 @@ namespace TextRPG
                 else if (invenItem[input].Use == true)
                 {
                     invenItem[input].Use = false;
-                    player.AttakcDamage -= invenItem[input].AttakcDamage;
-                    player.Deffense -= invenItem[input].Deffense;
+                    player.AttakcDamage -= invenItem[input].AttackDamage;
+                    player.Deffense -= invenItem[input].Defense;
                     Console.WriteLine($"{invenItem[input].Name} 장착 해제!");
                     Thread.Sleep(1000);
                     InventoryManagement();
@@ -431,7 +430,7 @@ namespace TextRPG
                     }
 
                 }
-                Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
+                Console.Write("\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
                 if (input == "0")
                 {
@@ -475,7 +474,7 @@ namespace TextRPG
                 Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n");
                 for (var i = 0; i < dungeons.Count; i++)
                 {
-                    Console.WriteLine($"[{i + 1}]. {dungeons[i].Name}\t\tl 방어력 {dungeons[i].Deffense}이상 권장");
+                    Console.WriteLine($"[{i + 1}]. {dungeons[i].Name}\t\tl 방어력 {dungeons[i].Defense}이상 권장");
                 }
                 Console.WriteLine("0. 나가기");
                 Console.Write("\n원하시는 행동을 입력해주세요.\n>>");
@@ -506,7 +505,7 @@ namespace TextRPG
                 int ranClear = random.Next(0, 5);
                 Console.Clear();
                 Scene(lv);
-                if (player.Deffense < dungeons[lv].Deffense)
+                if (player.Deffense < dungeons[lv].Defense)
                 {
                     if (ranClear < 2)
                     {
@@ -549,7 +548,7 @@ namespace TextRPG
                 int health = player.Health;
                 float gold = player.Gold;
                 Random random = new Random();
-                int minusHealth = random.Next(20 - (player.Deffense - dungeons[lv].Deffense), 36 - (player.Deffense - dungeons[lv].Deffense));
+                int minusHealth = random.Next(20 - (player.Deffense - dungeons[lv].Defense), 36 - (player.Deffense - dungeons[lv].Defense));
                 player.Health -= minusHealth;
                 if (player.IsDead)
                 {
@@ -568,7 +567,7 @@ namespace TextRPG
                     player.Gold += bounsRewards;
                     player.Exp++;
                     LvUP();
-                    Console.WriteLine($"[탐험결과]\n\n체력 {health} -> {player.Health}\nGold {gold} G -> {player.Gold}[{player.Gold-gold}G 증가]");
+                    Console.WriteLine($"[탐험결과]\n\n체력 {health} -> {player.Health}\nGold {gold} G -> {player.Gold} G [ {player.Gold-gold}G 증가 ]");
                 }
             }
             // 던전 클리어시 경험치 증가 일정 도달시 레벨업
@@ -666,9 +665,9 @@ namespace TextRPG
         static void Main(string[] args)
         {
             Player player = new Player();
-            List<IItem> invenItem = new List<IItem>();
-            List<IItem> items = new List<IItem> { new BasicArmor(), new IronArmor(), new SpartaArmor(), new Sword(), new Ax(), new Lance(), new Ring(), new Earing() };
-            List<IDungeon> dungeons = new List<IDungeon> { new EazyD(), new NormalD(), new HardD() };
+            List<Item> invenItem = new List<Item>();
+            List<Item> items = new List<Item> { new BasicArmor(), new IronArmor(), new SpartaArmor(), new Sword(), new Ax(), new Lance(), new Ring(), new Earing() };
+            List<Dungeon> dungeons = new List<Dungeon> { new EazyD(), new NormalD(), new HardD() };
             Stage stage = new Stage(player, items, invenItem, dungeons);
             stage.Start();
 
