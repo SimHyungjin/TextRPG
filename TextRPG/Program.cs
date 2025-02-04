@@ -24,6 +24,7 @@ namespace TextRPG
                 this.dungeons = dungeons;
             }
 
+            // 직업 선택
             public void ChooseJob()
             {
                 Console.Clear();
@@ -63,6 +64,7 @@ namespace TextRPG
                 }
 
             }
+            // 기본 메뉴
             public void  ChoiceState()
             {
                 Console.Clear();
@@ -101,6 +103,7 @@ namespace TextRPG
                     ChoiceState();
                 }
             }
+            // 캐릭터 상태 보기
             public void State()
             {
                 Console.Clear ();
@@ -141,6 +144,7 @@ namespace TextRPG
                     State();
                 }
             }
+            // 인벤토리
             public void Inventory()
             {
                 Console.Clear();
@@ -171,6 +175,7 @@ namespace TextRPG
                     Inventory();
                 }
             }
+            // 인벤토리 장착,장착해제
             public void InventoryManagement()
             {
                 Console.Clear();
@@ -208,6 +213,7 @@ namespace TextRPG
                 }
 
             }
+            // 아이템이 사용/해제 사용중인 무기타입((int)Player.WeaponType)이 있다면 기존 아이템 해제 해 장착
             public void UseItemCheck(int input, List<IItem> invenitem)
             {
                 if (invenItem[input].Use == false)
@@ -244,7 +250,7 @@ namespace TextRPG
                     InventoryManagement();
                 }
             }
-
+            // 상점
             public void Shop()
             {
                 Console.Clear();
@@ -291,6 +297,7 @@ namespace TextRPG
                 }
 
             }
+            // 상점 - 구매하기
             public void BuyShop()
             {
                 Console.Clear();
@@ -323,6 +330,7 @@ namespace TextRPG
                     BuyShop();
                 }
             }
+            // bool값 Buy가 false라면 true로 바꾸고 구매 이미 true라면 BuyShop()으로 돌아가기
             public void BuyShopCheck(int input)
             {
                 if (items[input].Buy == false && items[input].Gold <= player.Gold)
@@ -347,6 +355,7 @@ namespace TextRPG
                     BuyShop();
                 }
             }
+            // 상점 - 판매하기
             public void SellShop()
             {
                 Console.Clear();
@@ -377,6 +386,7 @@ namespace TextRPG
                     Shop();
                 }
             }
+            // bool값 Buy가 true라면 false로 바꾸고 판매
             public void SellShopCheck(int input)
             {
                 if (items[input].Buy == true)
@@ -394,6 +404,7 @@ namespace TextRPG
                     BuyShop();
                 }
             }
+            // 던전
             public void Dungeon()
             {
                 Console.Clear();
@@ -424,6 +435,7 @@ namespace TextRPG
                     Dungeon();
                 }
             }
+            // 던전 입장 방어력에 따라 클리어/실패 
             public void EnterDungeon(int lv)
             {
                 Random random = new Random();
@@ -449,6 +461,7 @@ namespace TextRPG
                     ClearDungeon(lv);
                 }
             }
+            // 던전 입장시 행동
             public void ClearDungeon(int lv)
             {
                 Console.Clear();
@@ -478,6 +491,7 @@ namespace TextRPG
                     Console.WriteLine($"[탐험결과]\n\n체력 {health} -> {player.Health}\nGold {gold} G -> {player.Gold}");
                 }
             }
+            // 던전 클리어시 경험치 증가 일정 도달시 레벨업
             public void LvUP()
             {
                 int lv = player.Lv;
@@ -493,6 +507,7 @@ namespace TextRPG
                     Console.WriteLine("★★★★★★");
                 }
             }
+            // 최대체력, 현재 골드의 여부를 따져 만족한다면 체력 회복
             public void rest()
             {
                 Console.Clear();
