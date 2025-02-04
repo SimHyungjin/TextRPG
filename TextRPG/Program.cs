@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TextRPG.TextRPG;
 
 namespace TextRPG
@@ -16,19 +17,26 @@ namespace TextRPG
             private List<IItem> invenItem;
             private List<IDungeon> dungeons;
 
-            public Stage(ICharacter player, List<IItem> items,List<IItem>invenItem,List<IDungeon>dungeons)
+            public Stage(ICharacter player, List<IItem> items, List<IItem> invenItem, List<IDungeon> dungeons)
             {
                 this.player = player;
                 this.items = items;
                 this.invenItem = invenItem;
                 this.dungeons = dungeons;
             }
-
+            // 글자색 바꾸기
+            public void OrderNameColor(string name)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{name}]");
+                Console.ResetColor();
+            }
             // 직업 선택
             public void ChooseJob()
             {
                 Console.Clear();
-                Console.Write($"[직업선택]\n직업을 선택해주세요. 잘못 선택 시 돌아올수 없습니다.\n\n1. {Job.전사}(기본)\n2. {Job.궁수}(공격력+2)\n3. {Job.도적}(공격력+5, 방어력-5)\n\n>>");
+                OrderNameColor("직업 선택");
+                Console.Write($"직업을 선택해주세요. 잘못 선택 시 돌아올수 없습니다.\n\n1. {Job.전사}(기본)\n2. {Job.궁수}(공격력+2)\n3. {Job.도적}(공격력+5, 방어력-5)\n\n>>");
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out int value))
                 {
@@ -47,7 +55,7 @@ namespace TextRPG
                             player.Deffense -= 5;
                             break;
                         default:
-                            Console.WriteLine("다시 입력해주세요.");
+                            Console.WriteLine("잘못된 입력입니다.");
                             Thread.Sleep(1000);
                             ChooseJob();
                             break;
@@ -65,10 +73,11 @@ namespace TextRPG
 
             }
             // 기본 메뉴
-            public void  ChoiceState()
+            public void ChoiceState()
             {
                 Console.Clear();
-                Console.WriteLine("[메뉴]\n무슨 행동을 할지 결정합니다.\n\n1. 상태보기\n2. 인벤토리\n3. 상점\n4. 던전 입장\n5. 휴식하기");
+                OrderNameColor("메뉴");
+                Console.WriteLine("무슨 행동을 할지 결정합니다.\n\n1. 상태보기\n2. 인벤토리\n3. 상점\n4. 던전 입장\n5. 휴식하기");
                 Console.Write("\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
                 if (input == "1")
@@ -106,9 +115,10 @@ namespace TextRPG
             // 캐릭터 상태 보기
             public void State()
             {
-                Console.Clear ();
-                Console.WriteLine("[상태 보기]\n캐릭터의 정보가 표시됩니다.\n");
-                if(player.Health > 0)
+                Console.Clear();
+                OrderNameColor("상태 보기");
+                Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
+                if (player.Health > 0)
                 {
                     if (player.Lv < 10)
                         Console.WriteLine("Lv : 0{0}", player.Lv);
@@ -128,7 +138,7 @@ namespace TextRPG
                     Console.WriteLine("공격력 : ???");
                     Console.WriteLine("방어력 : ???");
                     Console.WriteLine("체력 : ???");
-                    Console.WriteLine("Gold : {0}",player.Gold);
+                    Console.WriteLine("Gold : {0}", player.Gold);
                 }
                 Console.WriteLine("\n0. 나가기");
                 Console.Write("\n원하시는 행동을 입력해주세요.\n>>");
@@ -148,11 +158,12 @@ namespace TextRPG
             public void Inventory()
             {
                 Console.Clear();
-                Console.WriteLine("[인벤토리]\n보유 중인 아이템을 관리 할 수 있습니다.\n\n[아이템 목록]\n");
+                OrderNameColor("인벤토리");
+                Console.WriteLine("보유 중인 아이템을 관리 할 수 있습니다.\n\n[아이템 목록]\n");
 
-                if(invenItem!=null)
+                if (invenItem != null)
                 {
-                    for(int i = 0; i < invenItem.Count; i++)
+                    for (int i = 0; i < invenItem.Count; i++)
                     {
                         Console.WriteLine($"{invenItem[i].Name}\tl{invenItem[i].Effect}\tl {invenItem[i].Manual}\tl {invenItem[i].Gold} G");
                     }
@@ -160,11 +171,11 @@ namespace TextRPG
 
                 Console.WriteLine("1. 장착 관리.\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
-                if(input == "1")
+                if (input == "1")
                 {
                     InventoryManagement();
                 }
-                else if(input == "0")
+                else if (input == "0")
                 {
                     ChoiceState();
                 }
@@ -179,20 +190,21 @@ namespace TextRPG
             public void InventoryManagement()
             {
                 Console.Clear();
-                Console.WriteLine("[인벤토리 - 장착 관리]\n보유 중인 아이템을 관리 할 수 있습니다.\n\n[아이템 목록]");
+                OrderNameColor("[인벤토리 - 장착 관리]");
+                Console.WriteLine("보유 중인 아이템을 관리 할 수 있습니다.\n\n[아이템 목록]");
                 if (invenItem != null)
                 {
                     for (int i = 0; i < invenItem.Count; i++)
                     {
-                        if(invenItem[i].Use == false)
+                        if (invenItem[i].Use == false)
                         {
-                            Console.WriteLine($"-{i + 1} {invenItem[i].Name}\tl{invenItem[i].Effect}\tl {invenItem[i].Manual}\tl {invenItem[i].Gold} G");
+                            Console.WriteLine($"-{i + 1} [ ]{invenItem[i].Name}\tl{invenItem[i].Effect}\tl {invenItem[i].Manual}\tl {invenItem[i].Gold} G");
                         }
                         else
                         {
                             Console.WriteLine($"-{i + 1} [E]{invenItem[i].Name}\tl{invenItem[i].Effect}\tl {invenItem[i].Manual}\tl {invenItem[i].Gold} G");
                         }
-                       
+
                     }
                 }
                 Console.WriteLine("0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
@@ -201,9 +213,9 @@ namespace TextRPG
                 {
                     Inventory();
                 }
-                else if (int.TryParse(input, out int iInput) && iInput-1 < invenItem.Count)
+                else if (int.TryParse(input, out int iInput) && iInput - 1 < invenItem.Count)
                 {
-                    UseItemCheck(iInput-1, invenItem);
+                    UseItemCheck(iInput - 1, invenItem);
                 }
                 else
                 {
@@ -254,7 +266,8 @@ namespace TextRPG
             public void Shop()
             {
                 Console.Clear();
-                Console.WriteLine($"[상점]\n필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n{player.Gold}G\n");
+                OrderNameColor("상점");
+                Console.WriteLine($"필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n{player.Gold}G\n");
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (items[i].Buy == false)
@@ -271,7 +284,7 @@ namespace TextRPG
                     Console.Write("1. 아이템 구매\n2. 아이템 판매\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
                 }
                 string input = Console.ReadLine();
-                if(input == "1")
+                if (input == "1")
                 {
                     BuyShop();
                 }
@@ -281,11 +294,11 @@ namespace TextRPG
                     Thread.Sleep(1000);
                     Shop();
                 }
-                else if(input == "2")
+                else if (input == "2")
                 {
                     SellShop();
                 }
-                else if(input == "0")
+                else if (input == "0")
                 {
                     ChoiceState();
                 }
@@ -301,16 +314,17 @@ namespace TextRPG
             public void BuyShop()
             {
                 Console.Clear();
-                Console.WriteLine($"[상점 - 구매]\n필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n{player.Gold}G\n");
+                OrderNameColor("상점 - 구매");
+                Console.WriteLine($"필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n{player.Gold}G\n");
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (items[i].Buy == false)
                     {
-                        Console.WriteLine($"- {i+1} {items[i].Name}\tl{items[i].Effect}\tl {items[i].Manual}\tl {items[i].Gold} G");
+                        Console.WriteLine($"- {i + 1} {items[i].Name}\tl{items[i].Effect}\tl {items[i].Manual}\tl {items[i].Gold} G");
                     }
                     else
                     {
-                        Console.WriteLine($"- {i+1} {items[i].Name}\tl{items[i].Effect}\tl {items[i].Manual}\tl 구매완료");
+                        Console.WriteLine($"- {i + 1} {items[i].Name}\tl{items[i].Effect}\tl {items[i].Manual}\tl 구매완료");
                     }
                 }
                 Console.Write("\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
@@ -319,9 +333,9 @@ namespace TextRPG
                 {
                     Shop();
                 }
-                else if(int.TryParse(input, out int iInput) && iInput-1 < items.Count)
+                else if (int.TryParse(input, out int iInput) && iInput - 1 < items.Count)
                 {
-                    BuyShopCheck(iInput-1);
+                    BuyShopCheck(iInput - 1);
                 }
                 else
                 {
@@ -355,16 +369,17 @@ namespace TextRPG
                     BuyShop();
                 }
             }
-            // 상점 - 판매하기
+            // 상점 - 판매하기 Buy값이 false인 item만 출력
             public void SellShop()
             {
                 Console.Clear();
-                Console.WriteLine($"[상점 - 판매]\n필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n{player.Gold}G\n");
+                OrderNameColor("상점 - 판매");
+                Console.WriteLine($"필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n{player.Gold}G\n");
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (items[i].Buy != false)
                     {
-                        Console.WriteLine($"- {i + 1} {items[i].Name}\tl{items[i].Effect}\tl {items[i].Manual}\tl {items[i].Gold*0.85f}");
+                        Console.WriteLine($"- {i + 1} {items[i].Name}\tl{items[i].Effect}\tl {items[i].Manual}\tl {items[i].Gold * 0.85f}");
                     }
 
                 }
@@ -394,7 +409,7 @@ namespace TextRPG
                     items[input].Buy = false;
                     items[input].Use = false;
                     invenItem.Remove(items[input]);
-                    player.Gold += items[input].Gold *0.85f;
+                    player.Gold += items[input].Gold * 0.85f;
                     Console.WriteLine($"{items[input].Name} 판매 완료!");
                     Thread.Sleep(1000);
                     SellShop();
@@ -408,16 +423,17 @@ namespace TextRPG
             public void Dungeon()
             {
                 Console.Clear();
-                Console.WriteLine("[던전입장]\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n");
-                for(var i = 0; i < dungeons.Count; i++)
+                OrderNameColor("던전 입장");
+                Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n");
+                for (var i = 0; i < dungeons.Count; i++)
                 {
-                    Console.WriteLine($"[{i+1}]. {dungeons[i].Name}\t\tl 방어력 {dungeons[i].Deffense}이상 권장");
+                    Console.WriteLine($"[{i + 1}]. {dungeons[i].Name}\t\tl 방어력 {dungeons[i].Deffense}이상 권장");
                 }
                 Console.WriteLine("0. 나가기");
                 Console.Write("\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
 
-                if (int.TryParse(input, out int iInput) && iInput - 1 >= 0 && iInput-1 < dungeons.Count)
+                if (int.TryParse(input, out int iInput) && iInput - 1 >= 0 && iInput - 1 < dungeons.Count)
                 {
                     EnterDungeon(iInput - 1);
                     Console.Write("\n아무키나 누르면 메뉴로 돌아갑니다.\n>>");
@@ -440,13 +456,14 @@ namespace TextRPG
             {
                 Random random = new Random();
                 int ranClear = random.Next(0, 5);
-                
+                Console.Clear();
+                Scene(lv);
                 if (player.Deffense < dungeons[lv].Deffense)
                 {
                     if (ranClear < 2)
                     {
                         player.Health /= 2;
-                        Console.Clear() ;
+                        Console.Clear();
                         Console.WriteLine($"공략 실패!\n플레이어 체력 : {player.Health}");
                         Thread.Sleep(1000);
                         ChoiceState();
@@ -461,6 +478,21 @@ namespace TextRPG
                     ClearDungeon(lv);
                 }
             }
+            // 던전 레벨에 따라 전투 시간 증가
+            public void Scene(int lv)
+            {
+                for(int i = 0; i < (lv+1)*5; i++)
+                {
+                    Console.WriteLine("\n             전투중..\n");
+                    Console.Write("               ●\n\n");
+                    Thread.Sleep(100);
+                    Console.Write("               ●\n\n");
+                    Thread.Sleep(100);
+                    Console.Write("               ●");
+                    Thread.Sleep(100);
+                    Console.Clear();
+                }
+            }
             // 던전 입장시 행동
             public void ClearDungeon(int lv)
             {
@@ -471,20 +503,20 @@ namespace TextRPG
                 Random random = new Random();
                 int minusHealth = random.Next(20 - (player.Deffense - dungeons[lv].Deffense), 36 - (player.Deffense - dungeons[lv].Deffense));
                 player.Health -= minusHealth;
-                if(player.Health < 0)
+                if (player.Health < 0)
                 {
                     {
                         Console.Clear();
                         invenItem.Clear();
                         player.Gold = 0;
-                        Console.WriteLine("사망"); 
+                        Console.WriteLine("사망");
                     }
                 }
                 else
                 {
                     Console.WriteLine($"축하합니다!!\n{dungeons[lv].Name}을 클리어 하였습니다!");
                     player.Gold += dungeons[lv].Rewards;
-                    float bounsRewards = (float)(random.NextDouble()*player.AttakcDamage+player.AttakcDamage);
+                    float bounsRewards = (float)(random.NextDouble() * player.AttakcDamage + player.AttakcDamage);
                     player.Gold += bounsRewards;
                     player.Exp++;
                     LvUP();
@@ -496,7 +528,9 @@ namespace TextRPG
             {
                 int lv = player.Lv;
                 int exp = player.Exp;
-                if( lv == exp )
+                float attak = player.AttakcDamage;
+                int deffense = player.Deffense;
+                if (lv == exp)
                 {
                     player.Exp = 0;
                     player.AttakcDamage += 0.5f;
@@ -504,21 +538,22 @@ namespace TextRPG
                     player.Lv++;
                     player.Health = 100;
                     Console.WriteLine("★★★★★★");
-                    Console.WriteLine($"★레벨 업!★ LV : {lv} => LV : {player.Lv}");
-                    Console.WriteLine("★★★★★★");
+                    Console.WriteLine($"★ Lv Up! ★   LV : {lv} => LV : {player.Lv}");
+                    Console.WriteLine($"★★★★★★   {player.Name}의 공격력 : {attak} => {player.AttakcDamage}, 방어력 : {deffense} => {player.Deffense}");
                 }
             }
             // 최대체력, 현재 골드의 여부를 따져 만족한다면 체력 회복
             public void rest()
             {
                 Console.Clear();
+                OrderNameColor("휴식하기");
+                Console.WriteLine($"500G를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G)\n\n1. 휴식하기\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
                 int health = player.Health;
                 float gold = player.Gold;
-                Console.WriteLine($"[휴식하기]\n500G를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G)\n\n1. 휴식하기\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
                 if (input == "1")
                 {
-                    if(player.Health >= 100)
+                    if (player.Health >= 100)
                     {
                         Console.WriteLine("최대 체력입니다.");
                     }
@@ -528,7 +563,7 @@ namespace TextRPG
                         int plusHealth = player.Health - health;
                         player.Gold -= 500;
                         Console.WriteLine($"휴식을 완료했습니다.\n이전 Gold: {gold}, 현재 Gold : {player.Gold}\n이전 체력 : {health}, 증가한 체력 : {plusHealth}(100)");
-                        
+
                     }
                     else
                     {
@@ -555,14 +590,14 @@ namespace TextRPG
                 string input = Console.ReadLine();
                 Console.WriteLine($"\n{input}이 맞습니까?\n1. 예 \n2. 아니오");
                 string input2 = Console.ReadLine();
-                if(input2 == "1")
+                if (input2 == "1")
                 {
                     player.Name = input;
                     Console.Clear();
                     Console.WriteLine($"{player.Name}님 환영합니다.");
                     Thread.Sleep(1000);
                 }
-                else if(input2 == "2")
+                else if (input2 == "2")
                 {
                     Console.WriteLine("다시 정해주세요.");
                     Thread.Sleep(1000);
@@ -584,9 +619,9 @@ namespace TextRPG
         {
             Player player = new Player();
             List<IItem> invenItem = new List<IItem>();
-            List<IItem> items = new List<IItem> { new BasicArmor(), new IronArmor(), new SpartaArmor(), new Sword(), new Ax(), new Lance(),new Ring(),new Earing() };
-            List<IDungeon> dungeons = new List<IDungeon> { new EazyD(), new NormalD(), new HardD()};
-            Stage stage = new Stage(player,items,invenItem,dungeons);
+            List<IItem> items = new List<IItem> { new BasicArmor(), new IronArmor(), new SpartaArmor(), new Sword(), new Ax(), new Lance(), new Ring(), new Earing() };
+            List<IDungeon> dungeons = new List<IDungeon> { new EazyD(), new NormalD(), new HardD() };
+            Stage stage = new Stage(player, items, invenItem, dungeons);
             stage.Start();
 
         }
