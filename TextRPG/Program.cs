@@ -52,13 +52,13 @@ namespace TextRPG
                             ChooseJob();
                             break;
                     }
-                    Console.WriteLine($"당신의 직업은 {player.Job}입니다.");
+                    Console.WriteLine($"{player.Job}을(를) 선택하셨습니다.");
                     Thread.Sleep(1000);
                     ChoiceState();
                 }
                 else
                 {
-                    Console.WriteLine("다시 입력해주세요.");
+                    Console.WriteLine("잘못된 입력입니다.");
                     Thread.Sleep(1000);
                     ChooseJob();
                 }
@@ -502,6 +502,7 @@ namespace TextRPG
                     player.AttakcDamage += 0.5f;
                     player.Deffense += 1;
                     player.Lv++;
+                    player.Health = 100;
                     Console.WriteLine("★★★★★★");
                     Console.WriteLine($"★레벨 업!★ LV : {lv} => LV : {player.Lv}");
                     Console.WriteLine("★★★★★★");
