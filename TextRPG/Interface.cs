@@ -18,6 +18,7 @@ namespace TextRPG
             int Deffense { get; set; }
             int Health { get; set; }
             float Gold { get; set; }
+            bool IsDead {  get; }
         }
         public class Player : ICharacter
         {
@@ -29,6 +30,7 @@ namespace TextRPG
             public int Deffense { get; set; } = 5;
             public int Health { get; set; } = 100;
             public float Gold { get; set; } = 15000;
+            public bool IsDead => Health <= 0;
         }
         interface IItem
         {
