@@ -417,7 +417,7 @@ namespace TextRPG
                 Console.Write("\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
 
-                if (int.TryParse(input, out int iInput) && iInput - 1 >= 0 && iInput < dungeons.Count)
+                if (int.TryParse(input, out int iInput) && iInput - 1 >= 0 && iInput-1 < dungeons.Count)
                 {
                     EnterDungeon(iInput - 1);
                     Console.Write("\n아무키나 누르면 메뉴로 돌아갑니다.\n>>");
