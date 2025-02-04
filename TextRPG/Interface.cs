@@ -15,9 +15,9 @@ namespace TextRPG
             public string Name { get; set; } = string.Empty;
             public string Job { get; set; } = "전사";
             public float AttakcDamage { get; set; } = 10;
-            public int Deffense { get; set; } = 5;
+            public int Defense { get; set; } = 5;
             public int Health { get; set; } = 100;
-            public float Gold { get; set; } = 1500;
+            public float Gold { get; set; } = 15000;
             public bool IsDead => Health <= 0;
         }
         public class Player : Character
@@ -36,8 +36,6 @@ namespace TextRPG
             public string Manual { get; protected set; }
             public float Gold { get; protected set; }
 
-            public virtual void UseItem(Character player) { }
-
             public Item(int WeaponType, string Name, string Effect, float AttackDamage, int Defense, string Manual, float Gold)
             {
                 this.WeaponType = WeaponType;
@@ -48,11 +46,31 @@ namespace TextRPG
                 this.Manual = Manual;
                 this.Gold = Gold;
             }
+            public virtual void UseItem(Character player) { }
+            public void EquipItem(Character player)
+            {
+                if(!Use)
+                {
+                    player.AttakcDamage += this.AttackDamage;
+                    player.Defense += this.Defense;
+                    this.Use = true;
+                    Console.WriteLine($"{this.Name} 장착 완료!");
+                }
+            }
+            public void UnEquipItem(Character player)
+            {
+                if (Use)
+                {
+                    player.AttakcDamage -= this.AttackDamage;
+                    player.Defense -= this.Defense;
+                    this.Use = false;
+                    Console.WriteLine($"{this.Name} 해제 완료!");
+                }
+            }
         }
         public class BasicArmor : Item
         {
             public BasicArmor() : base(1, "수련자의 갑옷", "방어력 +5", 0, 5, "수련에 도움을 주는 갑옷입니다.\t\t", 1000) { }
-
         }
         public class IronArmor : Item
         {
@@ -120,16 +138,16 @@ namespace TextRPG
 
         public class EazyD : Dungeon
         {
-            public EazyD() : base("쉬운 던전", 5, 1000, $"방어력 5이상 권장.") { }
+            public EazyD() : base("쉬운 던전", 5, 1000, "방어력 5이상 권장.") { }
         }
         public class NormalD : Dungeon
         {
-            public NormalD() : base("일반 던전", 11, 1700, $"방어력 11이상 권장.") { }
+            public NormalD() : base("일반 던전", 11, 1700, "방어력 11이상 권장.") { }
         }
         public class HardD : Dungeon
         {
-            public HardD() : base("어려운 던전", 17, 2500, $"방어력 17이상 권장.") { }
+            public HardD() : base("어려운 던전", 17, 2500, "방어력 17이상 권장.") { }
         }
     }
-    enum Job {전사=1,궁수,도적}
+    enum Job { 전사 = 1, 궁수, 도적 }
 }

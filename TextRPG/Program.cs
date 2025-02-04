@@ -62,7 +62,7 @@ namespace TextRPG
                         case (int)Job.도적:
                             player.Job = "도적";
                             player.AttakcDamage += 5;
-                            player.Deffense -= 5;
+                            player.Defense -= 5;
                             break;
                         default:
                             Console.WriteLine("잘못된 입력입니다.");
@@ -165,7 +165,7 @@ namespace TextRPG
                         Console.WriteLine("Lv : {0}", player.Lv);
                     Console.WriteLine("{0} ({1})", player.Name, player.Job);
                     Console.WriteLine("공격력 : {0}", player.AttakcDamage);
-                    Console.WriteLine("방어력 : {0}", player.Deffense);
+                    Console.WriteLine("방어력 : {0}", player.Defense);
                     Console.WriteLine("체력 : {0}", player.Health);
                     Console.WriteLine("Gold : {0}", player.Gold);
                 }
@@ -230,7 +230,7 @@ namespace TextRPG
             public void InventoryManagement()
             {
                 Console.Clear();
-                ColorString("[인벤토리 - 장착 관리]");
+                ColorString("인벤토리 - 장착 관리");
                 Console.WriteLine("보유 중인 아이템을 관리 할 수 있습니다.\n\n[아이템 목록]");
                 if (invenItem != null)
                 {
@@ -281,26 +281,17 @@ namespace TextRPG
                     {
                         if (item.Use == true && invenItem[input].WeaponType == item.WeaponType)
                         {
-                            item.Use = false;
-                            player.AttakcDamage -= item.AttackDamage;
-                            player.Deffense -= item.Defense;
-                            Console.WriteLine($"{item.Name} 장착 해제!");
+                            item.UnEquipItem(player);
                         }
                     }
 
-                    invenItem[input].Use = true;
-                    player.AttakcDamage += invenItem[input].AttackDamage;
-                    player.Deffense += invenItem[input].Defense;
-                    Console.WriteLine($"{invenItem[input].Name} 장착 완료!");
+                    invenItem[input].EquipItem(player);
                     Thread.Sleep(1000);
                     InventoryManagement();
                 }
                 else if (invenItem[input].Use == true)
                 {
-                    invenItem[input].Use = false;
-                    player.AttakcDamage -= invenItem[input].AttackDamage;
-                    player.Deffense -= invenItem[input].Defense;
-                    Console.WriteLine($"{invenItem[input].Name} 장착 해제!");
+                    invenItem[input].UnEquipItem(player);
                     Thread.Sleep(1000);
                     InventoryManagement();
                 }
@@ -453,11 +444,11 @@ namespace TextRPG
             {
                 if (items[input].Buy == true)
                 {
+                    items[input].UnEquipItem(player);
                     items[input].Buy = false;
-                    items[input].Use = false;
+                    Console.WriteLine($"{items[input].Name} 판매 완료");
                     invenItem.Remove(items[input]);
                     player.Gold += items[input].Gold * 0.85f;
-                    Console.WriteLine($"{items[input].Name} 판매 완료!");
                     Thread.Sleep(1000);
                     SellShop();
                 }
@@ -505,7 +496,7 @@ namespace TextRPG
                 int ranClear = random.Next(0, 5);
                 Console.Clear();
                 Scene(lv);
-                if (player.Deffense < dungeons[lv].Defense)
+                if (player.Defense < dungeons[lv].Defense)
                 {
                     if (ranClear < 2)
                     {
@@ -548,7 +539,7 @@ namespace TextRPG
                 int health = player.Health;
                 float gold = player.Gold;
                 Random random = new Random();
-                int minusHealth = random.Next(20 - (player.Deffense - dungeons[lv].Defense), 36 - (player.Deffense - dungeons[lv].Defense));
+                int minusHealth = random.Next(20 - (player.Defense - dungeons[lv].Defense), 36 - (player.Defense - dungeons[lv].Defense));
                 player.Health -= minusHealth;
                 if (player.IsDead)
                 {
@@ -576,17 +567,17 @@ namespace TextRPG
                 int lv = player.Lv;
                 int exp = player.Exp;
                 float attak = player.AttakcDamage;
-                int deffense = player.Deffense;
+                int deffense = player.Defense;
                 if (lv == exp)
                 {
                     player.Exp = 0;
                     player.AttakcDamage += 0.5f;
-                    player.Deffense += 1;
+                    player.Defense += 1;
                     player.Lv++;
                     player.Health = 100;
                     Console.WriteLine("★★★★★★");
                     Console.WriteLine($"★ Lv Up! ★   LV : {lv} => LV : {player.Lv}");
-                    Console.WriteLine($"★★★★★★   {player.Name}의 공격력 : {attak} => {player.AttakcDamage}, 방어력 : {deffense} => {player.Deffense}");
+                    Console.WriteLine($"★★★★★★   {player.Name}의 공격력 : {attak} => {player.AttakcDamage}, 방어력 : {deffense} => {player.Defense}");
                 }
             }
             // 최대체력, 현재 골드의 여부를 따져 만족한다면 체력 회복
