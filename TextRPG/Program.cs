@@ -262,8 +262,7 @@ namespace TextRPG
             {
                 if (invenItem[input].WeaponType == 10)
                 {
-                    invenItem[input].UseItem(player);
-                    Console.WriteLine(invenitem[input].Effect);
+                    invenItem[input].UseItem(player,invenItem);
                     Thread.Sleep(1000);
                     invenItem.Clear();
                     ChoiceState();

@@ -16,7 +16,7 @@ namespace TextRPG
             public string Job { get; set; } = "전사";
             public float AttakcDamage { get; set; } = 10;
             public int Defense { get; set; } = 5;
-            public int Health { get; set; } = 100;
+            public int Health { get; set; } = 00;
             public float Gold { get; set; } = 1500;
             public bool IsDead => Health <= 0;
         }
@@ -46,7 +46,7 @@ namespace TextRPG
                 this.Manual = Manual;
                 this.Gold = Gold;
             }
-            public virtual void UseItem(Character player) { }
+            public virtual void UseItem(Character player, List<Item> invenItem) { }
             public void EquipItem(Character player)
             {
                 if(!Use)
@@ -112,10 +112,12 @@ namespace TextRPG
         {
             public Potion() : base(10, "부활초", "부활합니다.", 0, 0, "부활합니다. 사용 시 사라집니다.", 0) { }
 
-            public override void UseItem(Character player)
+            public override void UseItem(Character player, List<Item> invenItem)
             {
                 player.Name = "Zombi";
                 player.Health = 100;
+                Console.WriteLine(this.Effect);
+                invenItem.Remove(this);
             }
         }
 
