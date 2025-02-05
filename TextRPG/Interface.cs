@@ -17,7 +17,7 @@ namespace TextRPG
             public float AttakcDamage { get; set; } = 10;
             public int Defense { get; set; } = 5;
             public int Health { get; set; } = 100;
-            public float Gold { get; set; } = 15000;
+            public float Gold { get; set; } = 1500;
             public bool IsDead => Health <= 0;
         }
         public class Player : Character
@@ -110,7 +110,7 @@ namespace TextRPG
 
         public class Potion : Item
         {
-            public Potion() : base(10, "부활초", "부활합니다.", 0, 0, "부활합니다.", 0) { }
+            public Potion() : base(10, "부활초", "부활합니다.", 0, 0, "부활합니다. 사용 시 사라집니다.", 0) { }
 
             public override void UseItem(Character player)
             {

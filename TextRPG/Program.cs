@@ -16,7 +16,7 @@ namespace TextRPG
             private List<Item> items;
             private List<Item> invenItem;
             private List<Dungeon> dungeons;
-
+            private static Random random = new Random();
             public Stage(Character player, List<Item> items, List<Item> invenItem, List<Dungeon> dungeons)
             {
                 this.player = player;
@@ -103,8 +103,7 @@ namespace TextRPG
 
                 else if (input == "2")
                 {
-                    Random random = new Random();
-                    int ran = random.Next(0, 10);
+                    int ran = random.Next(0, 4);
                     if (player.IsDead && ran == 0)
                     {
                         Console.WriteLine("?");
@@ -148,13 +147,14 @@ namespace TextRPG
                 ColorString("상태 보기");
                 Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
 
-                if(!player.IsDead)
+                if (!player.IsDead)
                 {
                     if (player.Lv < 10)
                         Console.WriteLine("Lv : 0{0}", player.Lv);
                     else
                         Console.WriteLine("Lv : {0}", player.Lv);
                     Console.WriteLine("{0} ({1})", player.Name, player.Job);
+                    Console.WriteLine("경험치 : {0} %", player.Exp * 100 / player.Lv);
                     Console.WriteLine("공격력 : {0}", player.AttakcDamage);
                     Console.WriteLine("방어력 : {0}", player.Defense);
                     Console.WriteLine("체력 : {0}", player.Health);
@@ -164,6 +164,7 @@ namespace TextRPG
                 {
                     Console.WriteLine("Lv : ???");
                     Console.WriteLine("{0} (???)", player.Name);
+                    Console.WriteLine("경험치 : ??? %");
                     Console.WriteLine("공격력 : ???");
                     Console.WriteLine("방어력 : ???");
                     Console.WriteLine("체력 : ???");
@@ -200,7 +201,7 @@ namespace TextRPG
                     }
                 }
 
-                Console.WriteLine("1. 장착 관리.\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
+                Console.Write("1. 장착 관리.\n0. 나가기\n\n원하시는 행동을 입력해주세요.\n>>");
                 string input = Console.ReadLine();
                 if (input == "1")
                 {
@@ -264,6 +265,7 @@ namespace TextRPG
                     invenItem[input].UseItem(player);
                     Console.WriteLine(invenitem[input].Effect);
                     Thread.Sleep(1000);
+                    invenItem.Clear();
                     ChoiceState();
                 }
                 if (invenItem[input].Use == false)
@@ -483,7 +485,6 @@ namespace TextRPG
             // 던전 입장 방어력에 따라 클리어/실패 
             public void EnterDungeon(int lv)
             {
-                Random random = new Random();
                 int ranClear = random.Next(0, 5);
                 Console.Clear();
                 Scene(lv);
@@ -510,7 +511,7 @@ namespace TextRPG
             // 던전 레벨에 따라 전투 시간 증가
             public void Scene(int lv)
             {
-                for(int i = 0; i < (lv+1)*5; i++)
+                for (int i = 0; i < (lv + 1) * 3; i++)
                 {
                     Console.WriteLine("\n             전투중..\n");
                     Console.Write("               ●\n\n");
@@ -529,7 +530,6 @@ namespace TextRPG
 
                 int health = player.Health;
                 float gold = player.Gold;
-                Random random = new Random();
                 int minusHealth = random.Next(20 - (player.Defense - dungeons[lv].Defense), 36 - (player.Defense - dungeons[lv].Defense));
                 player.Health -= minusHealth;
                 if (player.IsDead)
@@ -546,10 +546,10 @@ namespace TextRPG
                     Console.WriteLine($"축하합니다!!\n{dungeons[lv].Name}을 클리어 하였습니다!");
                     player.Gold += dungeons[lv].Rewards;
                     float bounsRewards = (float)(random.NextDouble() * player.AttakcDamage + player.AttakcDamage);
-                    player.Gold += bounsRewards;
+                    player.Gold += (float)Math.Round(bounsRewards);
                     player.Exp++;
                     LvUP();
-                    Console.WriteLine($"[탐험결과]\n\n체력 {health} -> {player.Health}\nGold {gold} G -> {player.Gold} G [ {player.Gold-gold}G 증가 ]");
+                    Console.WriteLine($"[탐험결과]\n\n체력 {health} -> {player.Health}\nGold {gold} G -> {player.Gold} G [ {player.Gold - gold}G 증가 ]");
                 }
             }
             // 던전 클리어시 경험치 증가 일정 도달시 레벨업
