@@ -103,23 +103,14 @@ namespace TextRPG
 
                 else if (input == "2")
                 {
-                    if(player.IsDead)
+                    Random random = new Random();
+                    int ran = random.Next(0, 10);
+                    if (player.IsDead && ran == 0)
                     {
-                        Random random = new Random();
-                        int ran = random.Next(0, 10);
-                        if(ran == 0)
-                        {
-                            Console.WriteLine("?");
-                            Thread.Sleep(1000);
-                            invenItem.Add(new Potion());
-                            Inventory();
-                        }
-                        else
-                        {
-                            Console.WriteLine("현재 인벤토리는 비었습니다.");
-                            Thread.Sleep(1000);
-                            ChoiceState();
-                        }
+                        Console.WriteLine("?");
+                        Thread.Sleep(1000);
+                        invenItem.Add(new Potion());
+                        Inventory();
                     }
                     else
                     {
